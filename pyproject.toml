@@ -28,7 +28,7 @@ classifiers = [
   "Environment :: Web Environment",
   "Typing :: Typed",
 ]
-dependencies = ["reactpy>=1.1.0, <2.0.0", "typing_extensions"]
+dependencies = ["reactpy>=2.0.0b2", "typing_extensions"]
 dynamic = ["version"]
 urls.Changelog = "https://reactive-python.github.io/reactpy-router/latest/about/changelog/"
 urls.Documentation = "https://reactive-python.github.io/reactpy-router/latest/"

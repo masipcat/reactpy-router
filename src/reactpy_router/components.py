@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 from uuid import uuid4
 
 from reactpy import component, html, use_connection, use_ref
-from reactpy.backend.types import Location
+from reactpy.types import Location
 from reactpy.web.module import export, module_from_file
 
 from reactpy_router.hooks import _use_route_state
@@ -72,7 +72,7 @@ def _link(attributes: dict[str, Any], *children: Any) -> VdomDict:
     }
 
     def on_click_callback(_event: dict[str, Any]) -> None:
-        set_location(Location(**_event))
+        set_location(Location(path=_event["pathname"], query_string=_event["search"]))
 
     return html._(Link({"onClickCallback": on_click_callback, "linkClass": class_name}), html.a(attrs, *children))
 
@@ -116,9 +116,9 @@ def _navigate(to: str, replace: bool = False) -> VdomDict | None:
     pathname = to.split("?", 1)[0]
 
     def on_navigate_callback(_event: dict[str, Any]) -> None:
-        set_location(Location(**_event))
+        set_location(Location(path=_event["pathname"], query_string=_event["search"]))
 
-    if location.pathname != pathname:
+    if location.path != pathname:
         return Navigate({"onNavigateCallback": on_navigate_callback, "to": to, "replace": replace})
 
     return None

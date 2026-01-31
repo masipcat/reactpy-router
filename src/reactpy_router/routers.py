@@ -7,7 +7,7 @@ from logging import getLogger
 from typing import TYPE_CHECKING, Any, Union, cast
 
 from reactpy import component, use_memo, use_state
-from reactpy.backend.types import Connection, Location
+from reactpy.types import Connection, Location
 from reactpy.core.hooks import ConnectionContext, use_connection
 from reactpy.types import ComponentType, VdomDict
 
@@ -73,7 +73,7 @@ def router(
 
     if match:
         # Skip rendering until ReactPy-Router knows what URL the page is on.
-        if location:
+        if location or old_connection.location:
             route_element = _route_state_context(
                 match.element,
                 value=RouteState(set_location, match.params),
@@ -81,7 +81,7 @@ def router(
 
         def on_history_change(event: dict[str, Any]) -> None:
             """Callback function used within the JavaScript `History` component."""
-            new_location = Location(**event)
+            new_location = Location(path=event["pathname"], query_string=event["search"])
             if location != new_location:
                 set_location(new_location)
 
@@ -118,10 +118,10 @@ def _match_route(
     location: Location,
 ) -> MatchedRoute | None:
     for resolver in compiled_routes:
-        match = resolver.resolve(location.pathname)
+        match = resolver.resolve(location.path)
         if match is not None:
             return _add_route_key(match, resolver.key)
 
-    _logger.debug("No matching route found for %s", location.pathname)
+    _logger.debug("No matching route found for %s", location.path)
 
     return None
