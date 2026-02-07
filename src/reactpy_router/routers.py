@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Union, cast
 from reactpy import component, use_memo, use_state
 from reactpy.types import Connection, Location
 from reactpy.core.hooks import ConnectionContext, use_connection
-from reactpy.types import ComponentType, VdomDict
+from reactpy.types import Component, VdomDict
 
 from reactpy_router.components import History
 from reactpy_router.hooks import RouteState, _route_state_context
@@ -105,7 +105,7 @@ def _add_route_key(match: MatchedRoute, key: str | int) -> Any:
     """Add a key to the VDOM or component on the current route, if it doesn't already have one."""
     element = match.element
     if hasattr(element, "render") and not element.key:
-        element = cast(ComponentType, element)
+        element = cast(Component, element)
         element.key = key
     elif isinstance(element, dict) and not element.get("key", None):
         element = cast(VdomDict, element)
