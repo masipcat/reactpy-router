@@ -70,7 +70,7 @@ def router(
 
     if match:
         # Skip rendering until ReactPy-Router knows what URL the page is on.
-        if location:
+        if location or old_connection.location:
             route_element = _route_state_context(
                 match.element,
                 value=RouteState(set_location, match.params),
